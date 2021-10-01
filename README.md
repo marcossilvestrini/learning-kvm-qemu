@@ -1,6 +1,7 @@
 # LEARNNING GNU\LINUX KVM-QEMU VIRTUALIZATION
 
-![50_Oracle_Cloud_Infrastructure](https://user-images.githubusercontent.com/62715900/135468618-d814c2ee-62d0-4be0-8240-578945d4b62c.png)
+![image](https://user-images.githubusercontent.com/62715900/135548567-2f0d21f9-a3ba-41a7-9357-615927bb878f.png)
+
 
 >This project is about learning KVM for virtualization
 
