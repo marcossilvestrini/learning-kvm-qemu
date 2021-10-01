@@ -16,6 +16,8 @@
 ## References
 
 - [KVM Docs](https://www.linux-kvm.org/page/Documents)
+- [Install and Configure in Debian](https://www.linuxtechi.com/install-configure-kvm-debian-10-buster/)
+- [Create and Manage VM's](https://linuxconfig.org/how-to-create-and-manage-kvm-virtual-machines-from-cli)
 
 ## Install and Configure KVM in Debian
 
@@ -32,6 +34,9 @@ Step:2) Install QEMU-KVM & Libvirt packages along with virt-manager
 #install libvirt packages
 sudo apt install qemu-kvm libvirt-clients libvirt-daemon-system \
 bridge-utils virtinst libvirt-daemon virt-manager -y
+
+#osinfo
+apt-get install libosinfo-bin
 
 #check status libvirt
 sudo systemctl status libvirtd.service
@@ -104,4 +109,26 @@ sudo reboot
 
 #check network changes
 ip a s br0
+```
+
+## Default Paths for VMs
+
+$HOME/.local/share/libvirt/images\
+/var/lib/libvirt/images
+
+## list of all supported systems
+
+```sh
+osinfo-query os
+```
+
+## Create the new virtual machine
+
+```sh
+virt-install --name=debian-11-x64 \
+--vcpus=1 \
+--memory=1024 \
+--cdrom=/mnt/isos/Linux/debian-11.0.0-amd64-DVD-1.iso \
+--disk size=5 \
+--os-variant=debian9
 ```
