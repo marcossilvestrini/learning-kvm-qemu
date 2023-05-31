@@ -18,6 +18,7 @@
 - [KVM Docs](https://www.linux-kvm.org/page/Documents)
 - [Install and Configure in Debian](https://www.linuxtechi.com/install-configure-kvm-debian-10-buster/)
 - [Create and Manage VM's](https://linuxconfig.org/how-to-create-and-manage-kvm-virtual-machines-from-cli)
+- [Create and Manage VM's](https://wiki.debian.org/KVM)
 
 ## Install and Configure KVM in Debian
 
@@ -116,7 +117,7 @@ ip a s br0
 $HOME/.local/share/libvirt/images\
 /var/lib/libvirt/images
 
-## list of all supported systems
+## List of all supported systems
 
 ```sh
 osinfo-query os
