@@ -1,0 +1,49 @@
+$TTL 1h
+
+@                   IN      SOA     ol9-server01.skynet.com.br.   vagrant.skynet.com.br. (
+                            01                      ; serial
+                            28800                   ; refresh (8h)
+                            7200                    ; retry (2h)
+                            604800                  ; expire (7d)
+                            3600                    ; negative caching (1h)
+)
+
+
+@                   IN      NS      ol9-server01.skynet.com.br.                               
+                            NS      debian-server01.skynet.com.br.
+                            MX      5       mail
+                            MX      10      mail2
+
+ol9-server01                A       192.168.0.130   ;glue record,dns master
+ol9-server01                A       172.36.12.230   ;glue record,dns master
+ol9-server02                A       192.168.0.131   ;dns caching
+ol9-server02                A       172.36.12.231   ;dns caching
+debian-server01             A       192.168.0.140   ;glue record,dns slave
+debian-server01             A       172.36.12.240   ;glue record,dns slave
+debian-server02             A       192.168.0.141   ;dns forward
+debian-server02             A       172.36.12.241   ;dns forward
+ol9-client01                A       192.168.0.150   ;client server
+ol9-client01                A       172.36.12.250   ;client server
+debian-client01             A       192.168.0.150   ;client server
+debian-client01             A       172.36.12.250   ;client server
+win-silvestrini             A       192.168.0.100   ;my desktop
+win-silvestrin2             A       192.168.0.100   ;my notebook
+mail                        A       192.168.0.130   ;mail
+mail2                       A       192.168.0.140   ;mail
+ftp                         CNAME   ol9-server01    ;ftp
+www                         CNAME   ol9-server02    ;http - apache ha - skynet main page
+silvestrini                 A       192.168.0.131   ;http - apache ha - silvestrini main page
+music                       A       192.168.0.131   ;http - apache ha - music main page
+store                       A       192.168.0.131   ;http - apache ha - store main page
+finance                     A       192.168.0.131   ;http - apache ha - finance main page
+node01-silvestrini          A       192.168.0.140   ;http - apache node 1 - silvestrini main page
+node01-music                A       192.168.0.140   ;http - apache node 1 - music main page
+node01-store                A       192.168.0.140   ;http - apache node 1 - store main page
+node01-finance              A       192.168.0.140   ;http - apache node 1 - finance main page
+node02-silvestrini          A       192.168.0.141   ;http - apache node 2 - silvestrini main page
+node02-music                A       192.168.0.141   ;http - apache node 2 - music main page
+node02-store                A       192.168.0.141   ;http - apache node 2 - store main page
+node02-finance              A       192.168.0.141   ;http - apache node 2 - finance main page
+@                      IN   TXT     "skynet - The Company for crazy people!!!"
+
+skynet.com.br. IN DNSKEY 256 3 13 qzYHNPMPd6QjO66oHI4RL95LBSb3wRuEGJSXgByHJalof0DBJOucDKE1 MMudvv7eNoOabO+m91rQKUbRw6n/Vg==

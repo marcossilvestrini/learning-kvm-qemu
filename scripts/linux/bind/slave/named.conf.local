@@ -1,0 +1,24 @@
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+//My TSIG keys
+
+key "skynet.com.br" {
+	algorithm hmac-sha256;
+	secret "aIYTlJfNDaIvBEvTk7zjCm3beP3RzLAiJPtFvs5/mkE=";
+};
+
+server 192.168.0.130 {
+        keys { skynet.com.br; };
+};
+
+zone "skynet.com.br" {
+        type slave;
+        masters { 192.168.0.130; };
+        file "skynet.zone";
+};

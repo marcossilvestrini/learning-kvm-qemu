@@ -1,0 +1,4 @@
+search skynet.com.br        # private domain
+nameserver 192.168.0.130    # private ns1
+nameserver 192.168.0.140    # private ns2
+nameserver 1.1.1.1          # ns external

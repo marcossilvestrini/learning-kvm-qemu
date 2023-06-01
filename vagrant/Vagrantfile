@@ -1,0 +1,71 @@
+# Vagrant API version
+VAGRANTFILE_API_VERSION = "2"
+
+# INSTALL PLUGIN RELLOAD
+unless Vagrant.has_plugin?("vagrant-reload")
+  puts 'Installing vagrant-reload Plugin...'
+  system('vagrant plugin install vagrant-reload')
+end
+
+# INSTALL PLUGIN VBguest
+unless Vagrant.has_plugin?("vagrant-vbguest")
+  puts 'Installing vagrant-vbguest Plugin...'
+  system('vagrant plugin install vagrant-vbguest')
+end
+
+# GLOBAL BOX CONFIGURATIONS
+BOX_DEBIAN_NAME = "rockylinux/9"
+
+#DEFINE VM
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  # GLOBAL VMGUEST CONFIGURATIONS
+  config.vbguest.no_install  = true
+  config.vbguest.auto_update = false
+  config.vbguest.no_remote   = true
+  config.vm.box_download_insecure=true
+
+  # VM rock_kvm_server01 - DNS Bind, Postfix,Samba, NFS, Pure-FTP
+  config.vm.define "rock-kvm-server01"  do |rock_kvm_server01|
+    rock_kvm_server01.vm.box = BOX_OL_NAME
+    rock_kvm_server01.vm.box_url = "#{BOX_OL_URL}/#{BOX_OL_NAME}.json"
+
+    # VARIABLE HOSTNAME
+    VM_ROCK_KVM_SERVER01= "rock-kvm-server01"
+
+    # HOSTNAM
+    rock_kvm_server01.vm.hostname =VM_ROCK_KVM_SERVER01
+
+    # NETWORK
+    rock_kvm_server01.vm.network "public_network",nic_type: "virtio",ip: "192.168.0.130",mode: "bridge",bridge: [
+      "Intel(R) I211 Gigabit Network Connection",
+      "MediaTek Wi-Fi 6 MT7921 Wireless LAN"
+    ]
+    rock_kvm_server01.vm.network "private_network",ip: "172.36.12.2",nic_type: "virtio"
+
+    # MOUNTS
+    rock_kvm_server01.vm.synced_folder ".", "/vagrant", disabled: true
+    rock_kvm_server01.vm.synced_folder "../../security/", "/home/vagrant/security"
+    rock_kvm_server01.vm.synced_folder "../../configs/linux/", "/home/vagrant/configs"
+    rock_kvm_server01.vm.synced_folder "../../scripts/linux/", "/home/vagrant/scripts"
+
+    # PROVIDER
+    rock_kvm_server01.vm.provider "virtualbox" do |vb|
+      vb.linked_clone = true
+      vb.name =VM_ROCK_KVM_SERVER01
+      vb.memory = 27000
+      vb.cpus = 16
+    end
+
+    # SSH,FIREWALLD,SELINUX, UPDATES AND PROFILE
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-ROCK.SH]", path: "../../scripts/linux/commons/userdata-rock.sh"
+
+    # SET DNS BIND
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-BIND-MASTER.SH]", path: "../../scripts/linux/bind/userdata-bind-master.sh"
+
+    # CONFIGURE PURE-FTP
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-PUREFTP.SH]", path: "../../scripts/linux/pure-ftp/userdata-pureftp.sh"
+
+  end 
+
+end

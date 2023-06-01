@@ -1,0 +1,21 @@
+$TTL 1h
+
+@                   IN      SOA     ol9-server01.skynet.com.br.   admin.skynet.com.br. (
+                    01      ; serial
+                    28800   ; refresh (8h)
+                    7200    ; retry (2h)
+                    604800  ; expire (7d)
+                    3600    ; negative caching (1h)
+)
+
+                    NS      ol9-server01.skynet.com.br. ;primary nameserver                    
+
+1                   PTR     router.skynet.com.br.
+100                 PTR     win-silvestrini.skynet.com.br.
+111                 PTR     win-silvestrini.skynet.com.br.
+130                 PTR     ol9-server01.skynet.com.br.
+131                 PTR     ol9-server02.skynet.com.br.
+140                 PTR     debian-server01.skynet.com.br.
+141                 PTR     debian-server02.skynet.com.br.
+150                 PTR     ol9-client01.skynet.com.br.
+150                 PTR     debian-client01.skynet.com.br.

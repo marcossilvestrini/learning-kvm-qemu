@@ -1,0 +1,39 @@
+{
+    "cSpell.words": [
+        "apachectl",
+        "awscli",
+        "azurecli",
+        "eastus",
+        "htpasswd",
+        "itexam",
+        "loadbalance",
+        "LPIC",
+        "nameserver",
+        "noout",
+        "passout",
+        "Paulo",
+        "pstree",
+        "Roadmap",
+        "silvestrini",
+        "SSLCA",
+        "winget"
+    ],
+    "remote.SSH.remoteServerListenOnSocket": false,
+    "remote.SSH.defaultForwardedPorts": [
+
+    ],
+    "github-actions.workflows.pinned.workflows": [
+        ".github/workflows/check-http-stack.yml"
+    ],
+    "azureFunctions.deploySubpath": "app",
+    "azureFunctions.postDeployTask": "npm install (functions)",
+    "azureFunctions.projectLanguage": "JavaScript",
+    "azureFunctions.projectRuntime": "~4",
+    "debug.internalConsoleOptions": "neverOpen",
+    "azureFunctions.projectLanguageModel": 4,
+    "azureFunctions.preDeployTask": "npm prune (functions)",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8"
+    },
+    "python.formatting.provider": "none"
+}

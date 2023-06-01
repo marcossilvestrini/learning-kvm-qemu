@@ -1,11 +1,18 @@
 #ignore files general
-**/.vscode
-**/.log
-workspace.code-workspace
+**/*.log
+**/*.vagrant
+*workspace.code-workspace
+**/*.vdi
 
 #security
 **/authorized_keys
 **/*.pub
 **/*.ppk
-**/*pk_centos
 **/*private*
+!Klpic2.com.br.+013+29838.private
+security/*
+!security/README.md
+
+#Slack
+Slack/silvestrini.py
+*__pycache__*
