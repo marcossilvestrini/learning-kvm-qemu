@@ -16,11 +16,17 @@ cd /home/vagrant || exit
 usermod --password $(echo vagrant | openssl passwd -1 -stdin) vagrant
 usermod --password $(echo vagrant | openssl passwd -1 -stdin) root
 
-# Enable Epel repo
-dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y
+# Enable Epel repo 
+# https://www.linuxcapable.com/how-to-install-epel-on-rocky-linux/
+dnf config-manager --set-enabled crb
+dnf install -y \
+    https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
+    https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm
 
 # Install packages
 dnf update -y
+dnf upgrade --refresh -y
+dnf makecache --refresh
 dnf install -y bash-completion
 dnf install -y vim
 dnf install -y dos2unix
@@ -35,7 +41,7 @@ dnf install -y traceroute
 dnf install -y sysstat
 
 # Set profile in /etc/profile
-cp -f configs/commons/profile-ol9 /etc/profile
+cp -f configs/commons/profile-rock /etc/profile
 dos2unix /etc/profile
 
 # Set vim profile
@@ -44,7 +50,7 @@ dos2unix .vimrc
 chown vagrant:vagrant .vimrc
 
 # Set bash session
-cp -f configs/commons/.bashrc-ol9 .bashrc
+cp -f configs/commons/.bashrc-rock .bashrc
 dos2unix .bashrc .vimrc
 chown root:root .bashrc .vimrc
 
@@ -73,10 +79,8 @@ setenforce Permissive
 #echo vagrant | $(su -c "gpg -k" -s /bin/bash vagrant)
 
 # Install X11 Server
-dnf config-manager --set-enabled ol9_codeready_builder
-dnf update -y
-dnf install -y xorg-x11-server-Xorg.x86_64 xorg-x11-xauth.x86_64 \
-    xorg-x11-server-utils.x86_64 xorg-x11-utils.x86_64
+# https://installati.one/rockylinux/8/xorg-x11-server-common/
+dnf -y install xorg-x11-server-common
 
 # Enable sadc collected system activity
 cp -f configs/commons/sysstat /etc/default/

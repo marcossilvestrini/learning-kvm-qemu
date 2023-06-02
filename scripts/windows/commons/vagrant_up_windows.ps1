@@ -2,6 +2,7 @@
 .Synopsis
    Up lab for learning
 .DESCRIPTION
+   Set Vagrantfile for KVM server
    Set folder of virtualbox VM's
    Create a semafore for vagrant up
    Copy public key for vagrant shared folder
@@ -13,13 +14,11 @@
 #>
 
 # Execute script as Administrator
-if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator"))  
-{  
-  $arguments = "& '" +$myinvocation.mycommand.definition + "'"
-  Start-Process -Wait powershell -Verb runAs -WindowStyle Hidden -ArgumentList $arguments
-  Break
+if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {  
+   $arguments = "& '" + $myinvocation.mycommand.definition + "'"
+   Start-Process -Wait powershell -Verb runAs -WindowStyle Hidden -ArgumentList $arguments
+   Break
 }
-
 
 # Clear screen
 Clear-Host
@@ -29,52 +28,70 @@ Get-Process -Name *vagrant* | Stop-Process -Force
 Get-Process -Name *ruby* | Stop-Process -Force
 
 # Semafore for vagrant process
-$scriptPath=$PSScriptRoot
-$semafore="$scriptPath\vagrant-up.silvestrini"
+$scriptPath = $PSScriptRoot
+$semafore = "$scriptPath\vagrant-up.silvestrini"
 New-Item -ItemType File -Path $semafore -Force >$null
 
 # SSH
-$ssh_path="$( (($scriptPath | Split-Path -Parent)| Split-Path -Parent) | Split-Path -Parent)\security"
+$ssh_path = "$( (($scriptPath | Split-Path -Parent)| Split-Path -Parent) | Split-Path -Parent)\security"
 Copy-Item -Force "$env:USERPROFILE\.ssh\id_ecdsa.pub" -Destination $ssh_path
 
+# Define environment for labs(notebook, desktop)
 switch ($(hostname)) {
    "silvestrini" {
       # Variables
-      $vagrant="E:\Apps\Vagrant\bin\vagrant.exe"
-      $vagrantHome = "E:\Apps\Vagrant\vagrant.d" 
-      $vagrantPK="F:\Projetos\vagrant-pk"
-      $baseVagrantfile="F:\CERTIFICACAO\AWS Cloud Practitioner Essentials\vagrant\"
       $virtualboxFolder = "E:\Apps\VirtualBox"
       $virtualboxVMFolder = "E:\Servers\VirtualBox"
-     
+      $vagrantMemory=50000
+      $vagrantCPU=24
+      $vagranExtraDiskSize="100"
+      $vagrant = "E:\Apps\Vagrant\bin\vagrant.exe"
+      $vagrantHome = "E:\Apps\Vagrant\vagrant.d"  
+      $baseProject = "F:\Projetos\learning-kvm"          
+      $baseVagrantfile = "$baseProject\vagrant\linux"                  
+      $vagrantPK = "F:\Projetos\vagrant-pk"      
    }
    "silvestrini2" {      
       # Variables
-      $vagrant="C:\Cloud\Vagrant\bin\vagrant.exe"
-      $vagrantHome = "C:\Cloud\Vagrant\.vagrant.d"       
-      $vagrantPK="F:\Projetos\vagrant-pk"
-      $baseVagrantfile="F:\CERTIFICACAO\AWS Cloud Practitioner Essentials\vagrant\"      
       $virtualboxFolder = "C:\Program Files\Oracle\VirtualBox"
       $virtualboxVMFolder = "C:\Cloud\VirtualBox"
+      $vagrantMemory=27000
+      $vagrantCPU=8
+      $vagranExtraDiskSize="80"
+      $vagrant = "C:\Cloud\Vagrant\bin\vagrant.exe"
+      $vagrantHome = "C:\Cloud\Vagrant\.vagrant.d"             
+      $baseProject = "F:\Projetos\learning-kvm"                
+      $baseVagrantfile = "$baseProject\vagrant\linux"         
+      $vagrantPK = "F:\Projetos\vagrant-pk"      
       
    }
-   Default {Write-Host "This hostname is not available for execution this script!!!";exit 1}
+   Default { Write-Host "This hostname is not available for execution this script!!!"; exit 1 }
 }
 
 # VirtualBox home directory.
 Start-Process -Wait -NoNewWindow -FilePath "$virtualboxFolder\VBoxManage.exe" `
--ArgumentList  @("setproperty", "machinefolder", "$virtualboxVMFolder")
+   -ArgumentList  @("setproperty", "machinefolder", "$virtualboxVMFolder")
+
 # Vagrant home directory for downloadad boxes.
 setx VAGRANT_HOME "$vagrantHome" >$null
 
-# Up lab stack
-$lab = "$baseVagrantfile\linux"
-Set-Location $lab
-Start-Process -Wait -WindowStyle Minimized -FilePath $vagrant -ArgumentList "up"  -Verb RunAs
-Copy-Item .\.vagrant\machines\ol9-server01\virtualbox\private_key $vagrantPK\ol9-server01
-Copy-Item .\.vagrant\machines\debian-client01\virtualbox\private_key $vagrantPK\debian-client01
+# Set vagrant values for kvm server
+$vagrantTemplateFile = "$baseVagrantfile\templates\kvm"      
+$vagrantTemplate="$baseVagrantfile\Vagrantfile"   
+Get-Content $vagrantTemplateFile | ForEach-Object{
+   $_ -replace "VAGRANT_MEMORY",$vagrantMemory `
+      -replace "VAGRANT_CPU",$vagrantCPU `
+      -replace "EXTRA_DISK_SIZE",$vagranExtraDiskSize
+      
+} | Set-Content $vagrantTemplate -Force
 
-#Fix powershell error
+# Up kvm stack
+$kvm = "$baseVagrantfile"
+Set-Location $kvm
+Start-Process -Wait -WindowStyle Minimized -FilePath $vagrant -ArgumentList "up"  -Verb RunAs
+Copy-Item .\.vagrant\machines\rock-kvm-server01\virtualbox\private_key $vagrantPK\rock-kvm-server01
+
+# Fix powershell error
 $Env:VAGRANT_PREFER_SYSTEM_BIN += 0
 
 #Remove Semafore

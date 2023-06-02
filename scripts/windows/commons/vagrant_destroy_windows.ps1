@@ -26,7 +26,7 @@ Get-Process -Name *ruby* | Stop-Process -Force
 switch ($(hostname)) {
     "silvestrini" {       
         $vagrant = "E:\Apps\Vagrant\bin\vagrant.exe"
-        $baseVagrantfile="F:\CERTIFICACAO\AWS Cloud Practitioner Essentials\vagrant"
+        $baseVagrantfile="F:\Projetos\learning-kvm\vagrant"
         $vagrantHome = "E:\Apps\Vagrant\vagrant.d"      
         $virtualboxFolder = "E:\Apps\VirtualBox"
         $virtualboxVMFolder = "E:\Servers\VirtualBox" 
@@ -34,8 +34,7 @@ switch ($(hostname)) {
     "silvestrini2" {      
         # Variables
         $vagrant = "C:\Cloud\Vagrant\bin\vagrant.exe"  
-        $baseVagrantfile="F:\CERTIFICACAO\AWS Cloud Practitioner Essentials\vagrant"     
-        #$baseVagrantfile = "C:\Users\marcos.silvestrini\OneDrive\Projetos\AWS Cloud Practitioner Essentials\vagrant"
+        $baseVagrantfile="F:\Projetos\learning-kvm\vagrant"        
         $vagrantHome = "C:\Cloud\Vagrant\.vagrant.d"      
         $virtualboxFolder = "C:\Program Files\Oracle\VirtualBox"
         $virtualboxVMFolder = "C:\Cloud\VirtualBox"
@@ -51,19 +50,15 @@ Start-Process -Wait -NoNewWindow -FilePath "$virtualboxFolder\VBoxManage.exe" `
 setx VAGRANT_HOME $vagrantHome >$null
 
 #Vagrant Boxes
-$lab="$baseVagrantfile\linux"
+$kvm="$baseVagrantfile\linux"
 
 # Folder vagrant virtualbox machines artefacts
 $vmFolders = @(    
-    "$virtualboxVMFolder\ol9-server01",
-    "$virtualboxVMFolder\ol9-server02",
-    "$virtualboxVMFolder\debian-server01",
-    "$virtualboxVMFolder\debian-server02",    
-    "$virtualboxVMFolder\debian-client01"
+    "$virtualboxVMFolder\rock-kvm-server01"    
 )
 
 #Destroy lab stack
-Set-Location $lab
+Set-Location $kvm
 Start-Process -Wait -WindowStyle Hidden  -FilePath $vagrant -ArgumentList "destroy -f"  -Verb RunAs
 
 # Delete folder virtualbox machines artefacts
