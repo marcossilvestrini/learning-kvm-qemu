@@ -4,22 +4,6 @@
 
 >This project is about learning KVM for virtualization
 
-## Authors
-
-- Marcos Silvestrini
-- marcos.silvestrini@gmail.com
-
-## License
-
-- This project is licensed under the MIT License - see the LICENSE.md file for details
-
-## References
-
-- [KVM Docs](https://www.linux-kvm.org/page/Documents)
-- [Install and Configure in Debian](https://www.linuxtechi.com/install-configure-kvm-debian-10-buster/)
-- [Create and Manage VM's](https://linuxconfig.org/how-to-create-and-manage-kvm-virtual-machines-from-cli)
-- [Create and Manage VM's](https://wiki.debian.org/KVM)
-
 ## Install and Configure KVM in Debian
 
 Step:1) Check Whether Virtualization Extension is enabled or not:
@@ -33,8 +17,14 @@ Step:2) Install QEMU-KVM & Libvirt packages along with virt-manager
 
 ```sh
 #install libvirt packages
-sudo apt install qemu-kvm libvirt-clients libvirt-daemon-system \
-bridge-utils virtinst libvirt-daemon virt-manager -y
+sudo apt install -y \
+qemu-kvm \
+libvirt-clients \
+libvirt-daemon-system \
+bridge-utils \
+virtinst \
+libvirt-daemon \
+virt-manager
 
 #osinfo
 apt-get install libosinfo-bin
@@ -112,10 +102,86 @@ sudo reboot
 ip a s br0
 ```
 
+## Install and configure KVM in Rock linux(RHEL)
+
+### Install KVM packages
+
+```sh
+# Install the Packages
+dnf install -y \
+virt-install \
+qemu-kvm \
+libvirt \
+libvirt-python \
+libguestfs-tools \
+virt-manager
+
+# Enable and Start the Services
+systemctl enable libvirtd
+systemctl start libvirtd
+systemctl status libvirtd
+
+# A Clean System Reboot to ensure everything works after reboot
+#init 6
+
+# After the Host reboot, check libvirtd started successfully.
+systemctl status libvirtd
+
+# Also need to ensure the kernel modules for KVM are loaded.
+modinfo kvm_intel
+modinfo kvm
+```
+
+### Configure bridge network
+
+```sh
+## Variables
+BR_NAME="br0"
+BR_INT="eth1"
+SUBNET_IP="172.36.12.2/24"
+GW="172.36.12.1"
+DNS1="192.168.0.130"
+DNS2="1.1.1.1"
+
+## define the bridge network
+nmcli connection add type bridge autoconnect yes con-name ${BR_NAME} ifname ${BR_NAME}
+
+## add the IP, gateway, and DNS to the bridge
+nmcli connection modify ${BR_NAME} ipv4.addresses ${SUBNET_IP} ipv4.method manual
+nmcli connection modify ${BR_NAME} ipv4.gateway ${GW}
+nmcli connection modify ${BR_NAME} ipv4.dns ${DNS1} +ipv4.dns ${DNS2}
+
+## Clear old connections
+WIRED_NAME=$(nmcli -t -f NAME c show | grep "Wired")
+while IFS= read -r NAME; do echo nmcli connection delete "$NAME"; done <<< "$WIRED_NAME"
+
+## Add the identified network device as a slave to the bridge
+nmcli connection add type bridge-slave autoconnect yes con-name ${BR_INT} ifname ${BR_INT} master ${BR_NAME}
+
+## Start the network bridge
+nmcli connection up br0
+
+## Edit file /etc/qemu-kvm/bridge.conf
+# add this line:
+allow all
+
+## Restart KVM 
+systemctl restart libvirtd
+```
+
+## Storage Pool Configuration
+
+```sh
+
+
+```
+
 ## Default Paths for VMs
 
+```sh
 $HOME/.local/share/libvirt/images\
 /var/lib/libvirt/images
+```
 
 ## List of all supported systems
 
@@ -133,3 +199,19 @@ virt-install --name=debian-11-x64 \
 --disk size=5 \
 --os-variant=debian9
 ```
+
+## Authors
+
+- Marcos Silvestrini
+- marcos.silvestrini@gmail.com
+
+## License
+
+- This project is licensed under the MIT License - see the LICENSE.md file for details
+
+## References
+
+- [KVM Docs](https://www.linux-kvm.org/page/Documents)
+- [Install and Configure in Debian](https://www.linuxtechi.com/install-configure-kvm-debian-10-buster/)
+- [Create and Manage VM's](https://linuxconfig.org/how-to-create-and-manage-kvm-virtual-machines-from-cli)
+- [Create and Manage VM's](https://wiki.debian.org/KVM)

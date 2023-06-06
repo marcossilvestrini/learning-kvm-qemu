@@ -25,11 +25,11 @@ unless Vagrant.has_plugin?("vagrant-disksize")
   system('vagrant plugin install vagrant-disksize')
 end
 
-
 #DEFINE CONFIGS FOR ADICTIONAL DISKS
 
 ## file operations needs to be relative to this file
-VAGRANT_ROOT = File.dirname(File.expand_path(__FILE__))
+#VAGRANT_STORAGE = File.dirname(File.expand_path(__FILE__))
+VAGRANT_STORAGE = "E:/Servers/Virtualbox/Storage/rock-kvm-server01"
 
 ## directory that will contain VDI files
 VAGRANT_DISKS_DIRECTORY = "disks"
@@ -41,7 +41,7 @@ VAGRANT_CONTROLLER_TYPE = "virtio-scsi"
 ## define disks
 #The format is filename, size (GB), port (see controller docs)
 local_disks = [
-  { :filename => "disk1", :size => 80, :port => 5 }
+  { :filename => "disk1", :size => 100, :port => 5 }
   #{ :filename => "disk2", :size => 3, :port => 6 },
   #{ :filename => "disk3", :size => 5, :port => 25 }
 ]
@@ -71,7 +71,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     rock_kvm_server01.vm.box = BOX_ROCK_NAME
 
     # STORAGE
-    disks_directory = File.join(VAGRANT_ROOT, VAGRANT_DISKS_DIRECTORY)
+    disks_directory = File.join(VAGRANT_STORAGE, VAGRANT_DISKS_DIRECTORY)
 
     ## create disks before "up" action
     config.trigger.before :up do |trigger|
@@ -112,13 +112,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     rock_kvm_server01.vm.synced_folder "../../security/", "/home/vagrant/security"
     rock_kvm_server01.vm.synced_folder "../../configs/linux/", "/home/vagrant/configs"
     rock_kvm_server01.vm.synced_folder "../../scripts/linux/", "/home/vagrant/scripts"
+    rock_kvm_server01.vm.synced_folder "../../test/linux/", "/home/vagrant/test"
 
     # NETWORK
-    rock_kvm_server01.vm.network "public_network",nic_type: "virtio",ip: "192.168.0.130",mode: "bridge",bridge: [
+    ## Host-Only - Private Network
+    rock_kvm_server01.vm.network "private_network", nic_type: "virtio", adapter: 2, auto_config: false, mac: "080027f3066a", ip: "172.36.12.1", netmask: "255.255.255.0"
+    ## Bridge - Public Network
+    rock_kvm_server01.vm.network "public_network", nic_type: "virtio", adapter: 3, mac: "080027f3066b", ip: "192.168.0.130", mode: "bridge",bridge: [
       "Intel(R) I211 Gigabit Network Connection",
       "MediaTek Wi-Fi 6 MT7921 Wireless LAN"
     ]
-    rock_kvm_server01.vm.network "private_network",ip: "172.36.12.2",nic_type: "virtio"
+    
 
     # HOSTNAME
     rock_kvm_server01.vm.hostname =VM_ROCK_KVM_SERVER01
@@ -127,19 +131,32 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     rock_kvm_server01.vm.provider "virtualbox" do |vb|
       vb.linked_clone = true
       vb.name =VM_ROCK_KVM_SERVER01      
-      vb.memory = 27000
-      vb.cpus = 8
+      vb.memory = 50000
+      vb.cpus = 24
       vb.customize ["modifyvm", :id, "--nested-hw-virt", "on"]
     end
 
     # SSH,FIREWALLD,SELINUX, UPDATES AND PROFILE
-    #rock_kvm_server01.vm.provision "shell", name: "[USERDATA-ROCK.SH]", path: "../../scripts/linux/commons/userdata-rock.sh"
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-ROCK.SH]", path: "../../scripts/linux/commons/userdata-rock.sh"
 
     # SET DNS BIND
-    #rock_kvm_server01.vm.provision "shell", name: "[USERDATA-BIND-MASTER.SH]", path: "../../scripts/linux/bind/userdata-bind-master.sh"
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-BIND-MASTER.SH]", path: "../../scripts/linux/bind/userdata-bind-master.sh"
 
     # CONFIGURE PURE-FTP
-    #rock_kvm_server01.vm.provision "shell", name: "[USERDATA-PUREFTP.SH]", path: "../../scripts/linux/pure-ftp/userdata-pureftp.sh"
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-PUREFTP.SH]", path: "../../scripts/linux/pure-ftp/userdata-pureftp.sh"
+
+    # CONFIGURE SAMBA SHARE
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-SAMBA.SH]", path: "../../scripts/linux/samba/userdata-samba.sh"
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-SAMBA.SH]", path: "../../scripts/linux/samba/userdata-samba-client.sh"
+
+    # CONFIGURE KVM
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-KVM.SH]", path: "../../scripts/linux/kvm/userdata-kvm.sh"
+
+    # RESTART SERVER FOR APPLY NETWORK CONFIGURATION
+    rock_kvm_server01.vm.provision :shell do |shell|
+      shell.inline = 'echo Restart server...'
+      shell.reboot = true
+    end
 
     # cleanup after "destroy" action
     config.trigger.after :destroy do |trigger|

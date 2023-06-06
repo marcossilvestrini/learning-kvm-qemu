@@ -36,15 +36,19 @@ New-Item -ItemType File -Path $semafore -Force >$null
 $ssh_path = "$( (($scriptPath | Split-Path -Parent)| Split-Path -Parent) | Split-Path -Parent)\security"
 Copy-Item -Force "$env:USERPROFILE\.ssh\id_ecdsa.pub" -Destination $ssh_path
 
+# VM name
+$vmName="rock-kvm-server01"
+
 # Define environment for labs(notebook, desktop)
 switch ($(hostname)) {
    "silvestrini" {
       # Variables
       $virtualboxFolder = "E:\Apps\VirtualBox"
       $virtualboxVMFolder = "E:\Servers\VirtualBox"
+      $vagrantStorage="E:/Servers/Virtualbox/Storage/$vmName"
       $vagrantMemory=50000
       $vagrantCPU=24
-      $vagranExtraDiskSize="100"
+      $vagranExtraDiskSize="100"      
       $vagrant = "E:\Apps\Vagrant\bin\vagrant.exe"
       $vagrantHome = "E:\Apps\Vagrant\vagrant.d"  
       $baseProject = "F:\Projetos\learning-kvm"          
@@ -54,12 +58,13 @@ switch ($(hostname)) {
    "silvestrini2" {      
       # Variables
       $virtualboxFolder = "C:\Program Files\Oracle\VirtualBox"
-      $virtualboxVMFolder = "C:\Cloud\VirtualBox"
+      $virtualboxVMFolder = "D:\Cloud\VirtualBox"
+      $vagrantStorage="D:/Cloud/VirtualBox/Storage/$vmName"
       $vagrantMemory=27000
       $vagrantCPU=8
       $vagranExtraDiskSize="80"
-      $vagrant = "C:\Cloud\Vagrant\bin\vagrant.exe"
-      $vagrantHome = "C:\Cloud\Vagrant\.vagrant.d"             
+      $vagrant = "D:\Cloud\Vagrant\bin\vagrant.exe"
+      $vagrantHome = "D:\Cloud\Vagrant\.vagrant.d"             
       $baseProject = "F:\Projetos\learning-kvm"                
       $baseVagrantfile = "$baseProject\vagrant\linux"         
       $vagrantPK = "F:\Projetos\vagrant-pk"      
@@ -81,6 +86,7 @@ $vagrantTemplate="$baseVagrantfile\Vagrantfile"
 Get-Content $vagrantTemplateFile | ForEach-Object{
    $_ -replace "VAGRANT_MEMORY",$vagrantMemory `
       -replace "VAGRANT_CPU",$vagrantCPU `
+      -replace "PATH_STORAGE",$vagrantStorage `
       -replace "EXTRA_DISK_SIZE",$vagranExtraDiskSize
       
 } | Set-Content $vagrantTemplate -Force
@@ -88,8 +94,8 @@ Get-Content $vagrantTemplateFile | ForEach-Object{
 # Up kvm stack
 $kvm = "$baseVagrantfile"
 Set-Location $kvm
-Start-Process -Wait -WindowStyle Minimized -FilePath $vagrant -ArgumentList "up"  -Verb RunAs
-Copy-Item .\.vagrant\machines\rock-kvm-server01\virtualbox\private_key $vagrantPK\rock-kvm-server01
+Start-Process -Wait -WindowStyle Minimized -FilePath $vagrant -ArgumentList "up"  -Verb runAs
+Copy-Item .\.vagrant\machines\rock-kvm-server01\virtualbox\private_key "$vagrantPK\$vmName"
 
 # Fix powershell error
 $Env:VAGRANT_PREFER_SYSTEM_BIN += 0

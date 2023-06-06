@@ -33,11 +33,11 @@ switch ($(hostname)) {
     }
     "silvestrini2" {      
         # Variables
-        $vagrant = "C:\Cloud\Vagrant\bin\vagrant.exe"  
+        $vagrant = "D:\Cloud\Vagrant\bin\vagrant.exe"  
         $baseVagrantfile="F:\Projetos\learning-kvm\vagrant"        
-        $vagrantHome = "C:\Cloud\Vagrant\.vagrant.d"      
-        $virtualboxFolder = "C:\Program Files\Oracle\VirtualBox"
-        $virtualboxVMFolder = "C:\Cloud\VirtualBox"
+        $vagrantHome = "D:\Cloud\Vagrant\.vagrant.d"      
+        $virtualboxFolder = "D:\Program Files\Oracle\VirtualBox"
+        $virtualboxVMFolder = "D:\Cloud\VirtualBox"
     }
     Default { Write-Host "This hostname is not available for execution this script!!!"; exit 1 }
 }
@@ -52,10 +52,19 @@ setx VAGRANT_HOME $vagrantHome >$null
 #Vagrant Boxes
 $kvm="$baseVagrantfile\linux"
 
+# VM name
+$vmName="rock-kvm-server01"
+
 # Folder vagrant virtualbox machines artefacts
 $vmFolders = @(    
-    "$virtualboxVMFolder\rock-kvm-server01"    
+    "$virtualboxVMFolder\$vmName"    
 )
+
+# Folder vagrant virtualbox machines artefacts
+$vmStorageFolders = @(    
+    "$virtualboxVMFolder\Storage\$vmName"    
+)
+
 
 #Destroy lab stack
 Set-Location $kvm
@@ -63,6 +72,15 @@ Start-Process -Wait -WindowStyle Hidden  -FilePath $vagrant -ArgumentList "destr
 
 # Delete folder virtualbox machines artefacts
 $vmFolders | ForEach-Object {
+    If (Test-Path $_) {
+        If ( (Get-ChildItem -Recurse $_).Count -lt 3 ) {            
+            Remove-Item $_ -Recurse -Force
+        }        
+    }
+}
+
+# Delete folder virtualbox machines storage
+$vmStorageFolders | ForEach-Object {
     If (Test-Path $_) {
         If ( (Get-ChildItem -Recurse $_).Count -lt 3 ) {            
             Remove-Item $_ -Recurse -Force

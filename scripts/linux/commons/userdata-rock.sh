@@ -10,6 +10,7 @@ MULTILINE-COMMENT
 # Set language/locale and encoding
 export LANG=C
 
+# Set workdir
 cd /home/vagrant || exit
 
 # Set password account
@@ -39,6 +40,11 @@ dnf install -y bind-utils
 dnf install -y telnet
 dnf install -y traceroute
 dnf install -y sysstat
+dnf install -y NetworkManager-initscripts-updown
+dnf install -y python3-pip
+dnf install -y python3-virtualenv
+dnf install -y zip
+
 
 # Set profile in /etc/profile
 cp -f configs/commons/profile-rock /etc/profile
@@ -81,6 +87,7 @@ setenforce Permissive
 # Install X11 Server
 # https://installati.one/rockylinux/8/xorg-x11-server-common/
 dnf -y install xorg-x11-server-common
+dnf -y install xorg-x11-xauth
 
 # Enable sadc collected system activity
 cp -f configs/commons/sysstat /etc/default/

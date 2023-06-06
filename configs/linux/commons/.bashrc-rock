@@ -16,5 +16,12 @@ export PATH
 # RAND_COW=$(($RANDOM % $(ls /usr/share/cowsay/cows/*.cow | wc -l)))
 # cowsay -f ${COWS[$RAND_COW]} $(fortune -s)
 
+
+# Set PS1
+export PS1="\[\e[31m\][\[\e[m\]\[\e[38;5;172m\]\u\[\e[m\]@\[\e[38;5;153m\]\h\[\e[m\] \[\e[38;5;214m\]\W\[\e[m\]\[\e[31m\]]\[\e[m\]\\$"
+
+# Set packer home
+export PATH=/packer_home/:$PATH
+
 TZ='America/Sao_Paulo'
 export TZ
