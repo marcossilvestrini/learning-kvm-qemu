@@ -161,22 +161,6 @@ customElements.define('markdown-style', MarkdownStyle);</script><markdown-style 
     <blockquote>
       <p>This project is about learning KVM for virtualization</p>
     </blockquote>
-    <h2 id="authors"><a class="anchor" aria-hidden="true" tabindex="-1" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h2>
-    <ul>
-      <li>Marcos Silvestrini</li>
-      <li><a href="mailto:marcos.silvestrini@gmail.com">marcos.silvestrini@gmail.com</a></li>
-    </ul>
-    <h2 id="license"><a class="anchor" aria-hidden="true" tabindex="-1" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
-    <ul>
-      <li>This project is licensed under the MIT License - see the LICENSE.md file for details</li>
-    </ul>
-    <h2 id="references"><a class="anchor" aria-hidden="true" tabindex="-1" href="#references"><span class="octicon octicon-link"></span></a>References</h2>
-    <ul>
-      <li><a href="https://www.linux-kvm.org/page/Documents">KVM Docs</a></li>
-      <li><a href="https://www.linuxtechi.com/install-configure-kvm-debian-10-buster/">Install and Configure in Debian</a></li>
-      <li><a href="https://linuxconfig.org/how-to-create-and-manage-kvm-virtual-machines-from-cli">Create and Manage VM's</a></li>
-      <li><a href="https://wiki.debian.org/KVM">Create and Manage VM's</a></li>
-    </ul>
     <h2 id="install-and-configure-kvm-in-debian"><a class="anchor" aria-hidden="true" tabindex="-1" href="#install-and-configure-kvm-in-debian"><span class="octicon octicon-link"></span></a>Install and Configure KVM in Debian</h2>
     <p>Step:1) Check Whether Virtualization Extension is enabled or not:</p>
     <pre class="language-sh"><code class="language-sh code-highlight"><span class="code-line line-number" line="1"><span class="token function">egrep</span> <span class="token parameter variable">-c</span> <span class="token string">'(vmx|svm)'</span> /proc/cpuinfo
@@ -186,17 +170,29 @@ grep -E --color &#x27;(vmx|svm)&#x27; /proc/cpuinfo
 " class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
     <p>Step:2) Install QEMU-KVM &#x26; Libvirt packages along with virt-manager</p>
     <pre class="language-sh"><code class="language-sh code-highlight"><span class="code-line line-number" line="1"><span class="token comment">#install libvirt packages</span>
-</span><span class="code-line line-number" line="2"><span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> qemu-kvm libvirt-clients libvirt-daemon-system <span class="token punctuation">\</span>
-</span><span class="code-line line-number" line="3">bridge-utils virtinst libvirt-daemon virt-manager <span class="token parameter variable">-y</span>
-</span><span class="code-line line-number" line="4">
-</span><span class="code-line line-number" line="5"><span class="token comment">#osinfo</span>
-</span><span class="code-line line-number" line="6"><span class="token function">apt-get</span> <span class="token function">install</span> libosinfo-bin
-</span><span class="code-line line-number" line="7">
-</span><span class="code-line line-number" line="8"><span class="token comment">#check status libvirt</span>
-</span><span class="code-line line-number" line="9"><span class="token function">sudo</span> systemctl status libvirtd.service
+</span><span class="code-line line-number" line="2"><span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> <span class="token parameter variable">-y</span> <span class="token punctuation">\</span>
+</span><span class="code-line line-number" line="3">qemu-kvm <span class="token punctuation">\</span>
+</span><span class="code-line line-number" line="4">libvirt-clients <span class="token punctuation">\</span>
+</span><span class="code-line line-number" line="5">libvirt-daemon-system <span class="token punctuation">\</span>
+</span><span class="code-line line-number" line="6">bridge-utils <span class="token punctuation">\</span>
+</span><span class="code-line line-number" line="7">virtinst <span class="token punctuation">\</span>
+</span><span class="code-line line-number" line="8">libvirt-daemon <span class="token punctuation">\</span>
+</span><span class="code-line line-number" line="9">virt-manager
+</span><span class="code-line line-number" line="10">
+</span><span class="code-line line-number" line="11"><span class="token comment">#osinfo</span>
+</span><span class="code-line line-number" line="12"><span class="token function">apt-get</span> <span class="token function">install</span> libosinfo-bin
+</span><span class="code-line line-number" line="13">
+</span><span class="code-line line-number" line="14"><span class="token comment">#check status libvirt</span>
+</span><span class="code-line line-number" line="15"><span class="token function">sudo</span> systemctl status libvirtd.service
 </span></code><div onclick="copied(this)" data-code="#install libvirt packages
-sudo apt install qemu-kvm libvirt-clients libvirt-daemon-system \
-bridge-utils virtinst libvirt-daemon virt-manager -y
+sudo apt install -y \
+qemu-kvm \
+libvirt-clients \
+libvirt-daemon-system \
+bridge-utils \
+virtinst \
+libvirt-daemon \
+virt-manager
 
 #osinfo
 apt-get install libosinfo-bin
@@ -316,8 +312,133 @@ sudo reboot
 #check network changes
 ip a s br0
 " class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+    <h2 id="install-and-configure-kvm-in-rock-linuxrhel"><a class="anchor" aria-hidden="true" tabindex="-1" href="#install-and-configure-kvm-in-rock-linuxrhel"><span class="octicon octicon-link"></span></a>Install and configure KVM in Rock linux(RHEL)</h2>
+    <h3 id="install-kvm-packages"><a class="anchor" aria-hidden="true" tabindex="-1" href="#install-kvm-packages"><span class="octicon octicon-link"></span></a>Install KVM packages</h3>
+    <pre class="language-sh"><code class="language-sh code-highlight"><span class="code-line line-number" line="1"><span class="token comment"># Install the Packages</span>
+</span><span class="code-line line-number" line="2">dnf <span class="token function">install</span> <span class="token parameter variable">-y</span> <span class="token punctuation">\</span>
+</span><span class="code-line line-number" line="3">virt-install <span class="token punctuation">\</span>
+</span><span class="code-line line-number" line="4">qemu-kvm <span class="token punctuation">\</span>
+</span><span class="code-line line-number" line="5">libvirt <span class="token punctuation">\</span>
+</span><span class="code-line line-number" line="6">libvirt-python <span class="token punctuation">\</span>
+</span><span class="code-line line-number" line="7">libguestfs-tools <span class="token punctuation">\</span>
+</span><span class="code-line line-number" line="8">virt-manager
+</span><span class="code-line line-number" line="9">
+</span><span class="code-line line-number" line="10"><span class="token comment"># Enable and Start the Services</span>
+</span><span class="code-line line-number" line="11">systemctl <span class="token builtin class-name">enable</span> libvirtd
+</span><span class="code-line line-number" line="12">systemctl start libvirtd
+</span><span class="code-line line-number" line="13">systemctl status libvirtd
+</span><span class="code-line line-number" line="14">
+</span><span class="code-line line-number" line="15"><span class="token comment"># A Clean System Reboot to ensure everything works after reboot</span>
+</span><span class="code-line line-number" line="16"><span class="token comment">#init 6</span>
+</span><span class="code-line line-number" line="17">
+</span><span class="code-line line-number" line="18"><span class="token comment"># After the Host reboot, check libvirtd started successfully.</span>
+</span><span class="code-line line-number" line="19">systemctl status libvirtd
+</span><span class="code-line line-number" line="20">
+</span><span class="code-line line-number" line="21"><span class="token comment"># Also need to ensure the kernel modules for KVM are loaded.</span>
+</span><span class="code-line line-number" line="22">modinfo kvm_intel
+</span><span class="code-line line-number" line="23">modinfo kvm
+</span></code><div onclick="copied(this)" data-code="# Install the Packages
+dnf install -y \
+virt-install \
+qemu-kvm \
+libvirt \
+libvirt-python \
+libguestfs-tools \
+virt-manager
+
+# Enable and Start the Services
+systemctl enable libvirtd
+systemctl start libvirtd
+systemctl status libvirtd
+
+# A Clean System Reboot to ensure everything works after reboot
+#init 6
+
+# After the Host reboot, check libvirtd started successfully.
+systemctl status libvirtd
+
+# Also need to ensure the kernel modules for KVM are loaded.
+modinfo kvm_intel
+modinfo kvm
+" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+    <h3 id="configure-bridge-network"><a class="anchor" aria-hidden="true" tabindex="-1" href="#configure-bridge-network"><span class="octicon octicon-link"></span></a>Configure bridge network</h3>
+    <pre class="language-sh"><code class="language-sh code-highlight"><span class="code-line line-number" line="1"><span class="token comment">## Variables</span>
+</span><span class="code-line line-number" line="2"><span class="token assign-left variable">BR_NAME</span><span class="token operator">=</span><span class="token string">"br0"</span>
+</span><span class="code-line line-number" line="3"><span class="token assign-left variable">BR_INT</span><span class="token operator">=</span><span class="token string">"eth1"</span>
+</span><span class="code-line line-number" line="4"><span class="token assign-left variable">SUBNET_IP</span><span class="token operator">=</span><span class="token string">"172.36.12.2/24"</span>
+</span><span class="code-line line-number" line="5"><span class="token assign-left variable">GW</span><span class="token operator">=</span><span class="token string">"172.36.12.1"</span>
+</span><span class="code-line line-number" line="6"><span class="token assign-left variable">DNS1</span><span class="token operator">=</span><span class="token string">"192.168.0.130"</span>
+</span><span class="code-line line-number" line="7"><span class="token assign-left variable">DNS2</span><span class="token operator">=</span><span class="token string">"1.1.1.1"</span>
+</span><span class="code-line line-number" line="8">
+</span><span class="code-line line-number" line="9"><span class="token comment">## define the bridge network</span>
+</span><span class="code-line line-number" line="10">nmcli connection <span class="token function">add</span> <span class="token builtin class-name">type</span> bridge autoconnect <span class="token function">yes</span> con-name <span class="token variable">${BR_NAME}</span> ifname <span class="token variable">${BR_NAME}</span>
+</span><span class="code-line line-number" line="11">
+</span><span class="code-line line-number" line="12"><span class="token comment">## add the IP, gateway, and DNS to the bridge</span>
+</span><span class="code-line line-number" line="13">nmcli connection modify <span class="token variable">${BR_NAME}</span> ipv4.addresses <span class="token variable">${SUBNET_IP}</span> ipv4.method manual
+</span><span class="code-line line-number" line="14">nmcli connection modify <span class="token variable">${BR_NAME}</span> ipv4.gateway <span class="token variable">${GW}</span>
+</span><span class="code-line line-number" line="15">nmcli connection modify <span class="token variable">${BR_NAME}</span> ipv4.dns <span class="token variable">${DNS1}</span> +ipv4.dns <span class="token variable">${DNS2}</span>
+</span><span class="code-line line-number" line="16">
+</span><span class="code-line line-number" line="17"><span class="token comment">## Clear old connections</span>
+</span><span class="code-line line-number" line="18"><span class="token assign-left variable">WIRED_NAME</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span>nmcli <span class="token parameter variable">-t</span> <span class="token parameter variable">-f</span> NAME c show <span class="token operator">|</span> <span class="token function">grep</span> <span class="token string">"Wired"</span><span class="token variable">)</span></span>
+</span><span class="code-line line-number" line="19"><span class="token keyword">while</span> <span class="token assign-left variable"><span class="token environment constant">IFS</span></span><span class="token operator">=</span> <span class="token builtin class-name">read</span> <span class="token parameter variable">-r</span> NAME<span class="token punctuation">;</span> <span class="token keyword">do</span> <span class="token builtin class-name">echo</span> nmcli connection delete <span class="token string">"<span class="token variable">$NAME</span>"</span><span class="token punctuation">;</span> <span class="token keyword">done</span> <span class="token operator">&#x3C;&#x3C;&#x3C;</span> <span class="token string">"<span class="token variable">$WIRED_NAME</span>"</span>
+</span><span class="code-line line-number" line="20">
+</span><span class="code-line line-number" line="21"><span class="token comment">## Add the identified network device as a slave to the bridge</span>
+</span><span class="code-line line-number" line="22">nmcli connection <span class="token function">add</span> <span class="token builtin class-name">type</span> bridge-slave autoconnect <span class="token function">yes</span> con-name <span class="token variable">${BR_INT}</span> ifname <span class="token variable">${BR_INT}</span> master <span class="token variable">${BR_NAME}</span>
+</span><span class="code-line line-number" line="23">
+</span><span class="code-line line-number" line="24"><span class="token comment">## Start the network bridge</span>
+</span><span class="code-line line-number" line="25">nmcli connection up br0
+</span><span class="code-line line-number" line="26">
+</span><span class="code-line line-number" line="27"><span class="token comment">## Edit file /etc/qemu-kvm/bridge.conf</span>
+</span><span class="code-line line-number" line="28"><span class="token comment"># add this line:</span>
+</span><span class="code-line line-number" line="29">allow all
+</span><span class="code-line line-number" line="30">
+</span><span class="code-line line-number" line="31"><span class="token comment">## Restart KVM </span>
+</span><span class="code-line line-number" line="32">systemctl restart libvirtd
+</span></code><div onclick="copied(this)" data-code="## Variables
+BR_NAME=&#x22;br0&#x22;
+BR_INT=&#x22;eth1&#x22;
+SUBNET_IP=&#x22;172.36.12.2/24&#x22;
+GW=&#x22;172.36.12.1&#x22;
+DNS1=&#x22;192.168.0.130&#x22;
+DNS2=&#x22;1.1.1.1&#x22;
+
+## define the bridge network
+nmcli connection add type bridge autoconnect yes con-name ${BR_NAME} ifname ${BR_NAME}
+
+## add the IP, gateway, and DNS to the bridge
+nmcli connection modify ${BR_NAME} ipv4.addresses ${SUBNET_IP} ipv4.method manual
+nmcli connection modify ${BR_NAME} ipv4.gateway ${GW}
+nmcli connection modify ${BR_NAME} ipv4.dns ${DNS1} +ipv4.dns ${DNS2}
+
+## Clear old connections
+WIRED_NAME=$(nmcli -t -f NAME c show | grep &#x22;Wired&#x22;)
+while IFS= read -r NAME; do echo nmcli connection delete &#x22;$NAME&#x22;; done <<< &#x22;$WIRED_NAME&#x22;
+
+## Add the identified network device as a slave to the bridge
+nmcli connection add type bridge-slave autoconnect yes con-name ${BR_INT} ifname ${BR_INT} master ${BR_NAME}
+
+## Start the network bridge
+nmcli connection up br0
+
+## Edit file /etc/qemu-kvm/bridge.conf
+# add this line:
+allow all
+
+## Restart KVM 
+systemctl restart libvirtd
+" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+    <h2 id="storage-pool-configuration"><a class="anchor" aria-hidden="true" tabindex="-1" href="#storage-pool-configuration"><span class="octicon octicon-link"></span></a>Storage Pool Configuration</h2>
+    <pre class="language-sh"><code class="language-sh code-highlight"><span class="code-line line-number" line="1">
+</span><span class="code-line line-number" line="2">
+</span></code><div onclick="copied(this)" data-code="
+
+" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
     <h2 id="default-paths-for-vms"><a class="anchor" aria-hidden="true" tabindex="-1" href="#default-paths-for-vms"><span class="octicon octicon-link"></span></a>Default Paths for VMs</h2>
-    <p>$HOME/.local/share/libvirt/images<br>/var/lib/libvirt/images</p>
+    <pre class="language-sh"><code class="language-sh code-highlight"><span class="code-line line-number" line="1"><span class="token environment constant">$HOME</span>/.local/share/libvirt/images<span class="token punctuation">\</span>
+</span><span class="code-line line-number" line="2">/var/lib/libvirt/images
+</span></code><div onclick="copied(this)" data-code="$HOME/.local/share/libvirt/images\
+/var/lib/libvirt/images
+" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
     <h2 id="list-of-all-supported-systems"><a class="anchor" aria-hidden="true" tabindex="-1" href="#list-of-all-supported-systems"><span class="octicon octicon-link"></span></a>List of all supported systems</h2>
     <pre class="language-sh"><code class="language-sh code-highlight"><span class="code-line line-number" line="1">osinfo-query os
 </span></code><div onclick="copied(this)" data-code="osinfo-query os
@@ -336,6 +457,22 @@ ip a s br0
 --disk size=5 \
 --os-variant=debian9
 " class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+    <h2 id="authors"><a class="anchor" aria-hidden="true" tabindex="-1" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h2>
+    <ul>
+      <li>Marcos Silvestrini</li>
+      <li><a href="mailto:marcos.silvestrini@gmail.com">marcos.silvestrini@gmail.com</a></li>
+    </ul>
+    <h2 id="license"><a class="anchor" aria-hidden="true" tabindex="-1" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+    <ul>
+      <li>This project is licensed under the MIT License - see the LICENSE.md file for details</li>
+    </ul>
+    <h2 id="references"><a class="anchor" aria-hidden="true" tabindex="-1" href="#references"><span class="octicon octicon-link"></span></a>References</h2>
+    <ul>
+      <li><a href="https://www.linux-kvm.org/page/Documents">KVM Docs</a></li>
+      <li><a href="https://www.linuxtechi.com/install-configure-kvm-debian-10-buster/">Install and Configure in Debian</a></li>
+      <li><a href="https://linuxconfig.org/how-to-create-and-manage-kvm-virtual-machines-from-cli">Create and Manage VM's</a></li>
+      <li><a href="https://wiki.debian.org/KVM">Create and Manage VM's</a></li>
+    </ul>
   <style>markdown-style pre .copied {
   display: flex;
   position: absolute;
