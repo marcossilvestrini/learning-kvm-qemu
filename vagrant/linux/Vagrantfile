@@ -7,12 +7,6 @@ require 'fileutils'
 # Vagrant API version
 VAGRANTFILE_API_VERSION = "2"
 
-# INSTALL PLUGIN RELLOAD
-unless Vagrant.has_plugin?("vagrant-reload")
-  puts 'Installing vagrant-reload Plugin...'
-  system('vagrant plugin install vagrant-reload')
-end
-
 # INSTALL PLUGIN VBGUEST
 unless Vagrant.has_plugin?("vagrant-vbguest")
   puts 'Installing vagrant-vbguest Plugin...'
@@ -47,7 +41,8 @@ local_disks = [
 ]
 
 # GLOBAL BOX CONFIGURATIONS
-BOX_ROCK_NAME = "bento/rockylinux-9"
+BOX_ROCK_NAME = "generic/rocky9"
+
 
 # VARIABLE HOSTNAME
 VM_ROCK_KVM_SERVER01= "rock-kvm-server01"
@@ -68,9 +63,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "rock-kvm-server01"  do |rock_kvm_server01|
     
     # DEFINE BOX FOR USE
-    rock_kvm_server01.vm.box = BOX_ROCK_NAME
+    rock_kvm_server01.vm.box = BOX_ROCK_NAME    
 
     # STORAGE
+    
+    ## SECONDARY DISK /dev/sdb
     disks_directory = File.join(VAGRANT_STORAGE, VAGRANT_DISKS_DIRECTORY)
 
     ## create disks before "up" action
@@ -114,15 +111,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     rock_kvm_server01.vm.synced_folder "../../scripts/linux/", "/home/vagrant/scripts"
     rock_kvm_server01.vm.synced_folder "../../test/linux/", "/home/vagrant/test"
 
-    # NETWORK
-    ## Host-Only - Private Network
-    rock_kvm_server01.vm.network "private_network", nic_type: "virtio", adapter: 2, auto_config: false, mac: "080027f3066a", ip: "172.36.12.1", netmask: "255.255.255.0"
+    # NETWORK    
     ## Bridge - Public Network
-    rock_kvm_server01.vm.network "public_network", nic_type: "virtio", adapter: 3, mac: "080027f3066b", ip: "192.168.0.130", mode: "bridge",bridge: [
+    rock_kvm_server01.vm.network "public_network", nic_type: "virtio", adapter: 2, mac: "080027f3066a", ip: "192.168.0.130", netmask: "255.255.255.0", mode: "bridge",bridge: [
       "Intel(R) I211 Gigabit Network Connection",
       "MediaTek Wi-Fi 6 MT7921 Wireless LAN"
     ]
-    
+    ## Host-Only - Private Network
+    #rock_kvm_server01.vm.network "private_network", nic_type: "virtio", adapter: 3, auto_config: false, mac: "080027f3066b", ip: "172.36.12.2", netmask: "255.255.255.0"
+    rock_kvm_server01.vm.network "private_network", nic_type: "virtio", adapter: 3, mac: "080027f3066b", ip: "172.36.12.2", netmask: "255.255.255.0"
 
     # HOSTNAME
     rock_kvm_server01.vm.hostname =VM_ROCK_KVM_SERVER01
@@ -133,7 +130,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vb.name =VM_ROCK_KVM_SERVER01      
       vb.memory = 50000
       vb.cpus = 24
-      vb.customize ["modifyvm", :id, "--nested-hw-virt", "on"]
+      vb.customize ["modifyvm", :id, "--nested-hw-virt", "on"]      
     end
 
     # SSH,FIREWALLD,SELINUX, UPDATES AND PROFILE
@@ -147,16 +144,25 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # CONFIGURE SAMBA SHARE
     rock_kvm_server01.vm.provision "shell", name: "[USERDATA-SAMBA.SH]", path: "../../scripts/linux/samba/userdata-samba.sh"
-    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-SAMBA.SH]", path: "../../scripts/linux/samba/userdata-samba-client.sh"
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-SAMBA-CLIENT.SH]", path: "../../scripts/linux/samba/userdata-samba-client.sh"
+
+    # INSTALL CONFIGURE PACKER
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-KVM.SH]", path: "../../scripts/linux/packer/userdata-packer.sh"
+
+    # INSTALL CONFIGURE TERRAFORM
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-KVM.SH]", path: "../../scripts/linux/terraform/userdata-terraform.sh"
+
+    # INSTALL CONFIGURE ANSIBLE
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-KVM.SH]", path: "../../scripts/linux/ansible/userdata-ansible.sh"
 
     # CONFIGURE KVM
     rock_kvm_server01.vm.provision "shell", name: "[USERDATA-KVM.SH]", path: "../../scripts/linux/kvm/userdata-kvm.sh"
 
     # RESTART SERVER FOR APPLY NETWORK CONFIGURATION
-    rock_kvm_server01.vm.provision :shell do |shell|
-      shell.inline = 'echo Restart server...'
-      shell.reboot = true
-    end
+    #rock_kvm_server01.vm.provision :shell do |shell|
+    #  shell.inline = 'echo Restart server...'
+    #  shell.reboot = true
+    #end    
 
     # cleanup after "destroy" action
     config.trigger.after :destroy do |trigger|

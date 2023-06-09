@@ -1,0 +1,6 @@
+#KVM STORAGE -BEGIN
+/dev/mapper/lab_kvm_storage-lab_kvm_lv    /var/lib/libvirt/images xfs     defaults        0 0
+#KVM STORAGE -END
+#CIFS shares -BEGIN
+//win-silvestrini/ISOS   /mnt/isos  cifs    vers=3.0,user,credentials=/home/vagrant/.samba-access    0  0
+#CIFS shares -END

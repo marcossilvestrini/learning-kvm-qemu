@@ -17,7 +17,6 @@ if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
   Break
 }
 
-
 #Stop vagrant process
 Get-Process -Name *vagrant* | Stop-Process -Force
 Get-Process -Name *ruby* | Stop-Process -Force

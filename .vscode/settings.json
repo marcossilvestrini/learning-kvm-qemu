@@ -16,7 +16,8 @@
         "Roadmap",
         "silvestrini",
         "SSLCA",
-        "winget"
+        "winget",
+        "VM's"
     ],
     "remote.SSH.remoteServerListenOnSocket": false,
     "remote.SSH.defaultForwardedPorts": [

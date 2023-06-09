@@ -45,7 +45,7 @@ if [ -f "configs/samba/fstab"  ];then
     rm "configs/samba/fstab"
 fi
 cp "configs/samba/fstab_${VM}_backup" configs/samba/fstab
-cat configs/samba/cifs-shares >> configs/samba/fstab
+cat configs/commons/template-fstab >> configs/samba/fstab
 cp configs/samba/fstab /etc/fstab
 dos2unix /etc/fstab
 chmod 644 /etc/fstab  
@@ -55,4 +55,3 @@ systemctl daemon-reload
 umount /mnt/isos 2>&1
 mkdir -p /mnt/isos
 mount /mnt/isos
-

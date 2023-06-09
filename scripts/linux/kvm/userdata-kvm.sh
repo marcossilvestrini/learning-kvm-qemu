@@ -89,7 +89,7 @@ echo -e "${GREEN} "
 ## Variables
 BR_NAME="br0"
 BR_INT="eth1"
-SUBNET_IP="172.36.12.2/24"
+SUBNET_IP="172.36.12.3/24"
 GW="172.36.12.1"
 DNS1="192.168.0.130"
 DNS2="1.1.1.1"
@@ -100,7 +100,8 @@ nmcli connection add type bridge autoconnect yes con-name ${BR_NAME} ifname ${BR
 ## add the IP, gateway, and DNS to the bridge
 nmcli connection modify ${BR_NAME} ipv4.addresses ${SUBNET_IP} ipv4.method manual
 nmcli connection modify ${BR_NAME} ipv4.gateway ${GW}
-nmcli connection modify ${BR_NAME} ipv4.dns ${DNS1} +ipv4.dns ${DNS2}
+nmcli connection modify ${BR_NAME} ipv4.dns ${DNS1}
+nmcli connection modify ${BR_NAME} +ipv4.dns ${DNS2}
 
 ## Clear old connections
 WIRED_NAME=$(nmcli -t -f NAME c show | grep "Wired")
@@ -110,13 +111,17 @@ while IFS= read -r NAME; do echo nmcli connection delete "$NAME"; done <<< "$WIR
 nmcli connection add type bridge-slave autoconnect yes con-name ${BR_INT} ifname ${BR_INT} master ${BR_NAME}
 
 ## Start the network bridge
+nmcli connection reload
 nmcli connection up br0
 
-# Edit file /etc/qemu-kvm/bridge.conf
+## Edit file /etc/qemu-kvm/bridge.conf
 # -rw-r--r--. 1 root root 13 May  9 04:44 /etc/qemu-kvm/bridge.conf
 cp configs/kvm/bridge.conf /etc/qemu-kvm/
 dos2unix /etc/qemu-kvm/bridge.conf
 chmod 644 /etc/qemu-kvm/bridge.conf
+
+## Restart NetworkManager
+systemctl restart NetworkManager
 
 ## Restart KVM 
 systemctl restart libvirtd
@@ -128,3 +133,26 @@ echo -e "${GREEN}$(ip link show br0 && ip addr show br0)"
 echo -e "${GREEN}$(virsh net-list)"
 echo -e "${LIGHTGRAY}----------------------------------------------------------------"
 
+# Configure KVM Storage Pool
+
+## Mount /dev/sdb - logical volume
+echo -e "${ORANGE}Mount /dev/mapper/lab_kvm_storage-lab_kvm_lv ---> /var/lib/libvirt/images..."
+mount /var/lib/libvirt/images
+
+# Check Mount Point
+echo -e "${ORANGE}Check Mount Point..."
+echo -e "${GREEN} "
+df -h  /var/lib/libvirt/images
+echo -e "${LIGHTGRAY}----------------------------------------------------------------"
+
+## Create Storage Pool
+echo -e "${ORANGE}Create Storage Pool..."
+echo -e "${GREEN} "
+virsh pool-define-as lab_kvm_storagepool --type dir --target /var/lib/libvirt/images
+virsh pool-autostart  lab_kvm_storagepool
+virsh pool-start  lab_kvm_storagepool
+
+## Check Storage Pool
+echo -e "${ORANGE}Check Storage Pool..."
+echo -e "${GREEN} "
+virsh pool-list --all --details

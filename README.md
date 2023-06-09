@@ -102,7 +102,7 @@ sudo reboot
 ip a s br0
 ```
 
-## Install and configure KVM in Rock linux(RHEL)
+## Install and configure KVM in Rock linux
 
 ### Install KVM packages
 
@@ -172,14 +172,31 @@ systemctl restart libvirtd
 ## Storage Pool Configuration
 
 ```sh
+# create pv
+pvcreate /dev/sdb
 
+# create vg
+vgcreate lab_kvm_storage /dev/sdb
 
+# create lv
+lvcreate -l +100%FREE -n lab_kvm_lv lab_kvm_storage
+
+# format lv with filesystem xfs
+mkfs.xfs /dev/mapper/lab_kvm_storage-lab_kvm_lv
+
+# Edit /etc/fstab and add this lines
+#KVM STORAGE -BEGIN
+/dev/mapper/lab_kvm_storage-lab_kvm_lv    /var/lib/libvirt/images xfs     defaults        0 0
+#KVM STORAGE -END
+
+# mount lv in folder
+mount -a
 ```
 
 ## Default Paths for VMs
 
 ```sh
-$HOME/.local/share/libvirt/images\
+$HOME/.local/share/libvirt/images
 /var/lib/libvirt/images
 ```
 
@@ -215,3 +232,5 @@ virt-install --name=debian-11-x64 \
 - [Install and Configure in Debian](https://www.linuxtechi.com/install-configure-kvm-debian-10-buster/)
 - [Create and Manage VM's](https://linuxconfig.org/how-to-create-and-manage-kvm-virtual-machines-from-cli)
 - [Create and Manage VM's](https://wiki.debian.org/KVM)
+- [Rocky Linux Virtualization Techniques](https://www.answertopia.com/rocky-linux/an-overview-of-rocky-linux-virtualization-techniques/)
+- [Create KVM Network Bridge in Rock Linux 9](https://www.answertopia.com/rocky-linux/creating-a-rocky-linux-kvm-networked-bridge-interface/)

@@ -17,12 +17,12 @@ cd /home/vagrant || exit
 usermod --password $(echo vagrant | openssl passwd -1 -stdin) vagrant
 usermod --password $(echo vagrant | openssl passwd -1 -stdin) root
 
-# Enable Epel repo 
+# Enable Epel repo
 # https://www.linuxcapable.com/how-to-install-epel-on-rocky-linux/
 dnf config-manager --set-enabled crb
 dnf install -y \
-    https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
-    https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm
+https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
+https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm
 
 # Install packages
 dnf update -y
@@ -30,6 +30,8 @@ dnf upgrade --refresh -y
 dnf makecache --refresh
 dnf install -y bash-completion
 dnf install -y vim
+dnf install -y curl
+dnf install -y git
 dnf install -y dos2unix
 dnf install -y sshpass
 dnf install -y htop
@@ -42,9 +44,8 @@ dnf install -y traceroute
 dnf install -y sysstat
 dnf install -y NetworkManager-initscripts-updown
 dnf install -y python3-pip
-dnf install -y python3-virtualenv
 dnf install -y zip
-
+dnf install -y lvm2
 
 # Set profile in /etc/profile
 cp -f configs/commons/profile-rock /etc/profile
@@ -57,8 +58,8 @@ chown vagrant:vagrant .vimrc
 
 # Set bash session
 cp -f configs/commons/.bashrc-rock .bashrc
-dos2unix .bashrc .vimrc
-chown root:root .bashrc .vimrc
+dos2unix .bashrc
+chown vagrant:vagrant .bashrc
 
 # Set properties for user root
 cp -f .bashrc .vimrc /root/
@@ -111,3 +112,28 @@ rm /etc/resolv.conf
 cp configs/commons/resolv.conf.manually-configured /etc
 dos2unix  /etc/resolv.conf.manually-configured
 ln -s /etc/resolv.conf.manually-configured /etc/resolv.conf
+
+
+# Configure Storage /dev/sdb
+
+# Check whats is primary disk(vagrant not assume always /dev/sda at primary)
+CHECK_SDA=$(lsblk |grep  sda1)
+if [[ $CHECK_SDA == "" ]];
+then
+    DISK="/dev/sda"
+else
+    DISK="/dev/sdb"
+    
+fi
+
+# create pv
+pvcreate "$DISK"
+
+# create vg
+vgcreate lab_kvm_storage "$DISK"
+
+# create lv
+lvcreate -l +100%FREE -n lab_kvm_lv lab_kvm_storage
+
+# format lv with filesystem xfs
+mkfs.xfs -f /dev/mapper/lab_kvm_storage-lab_kvm_lv

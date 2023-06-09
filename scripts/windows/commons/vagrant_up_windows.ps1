@@ -14,11 +14,11 @@
 #>
 
 # Execute script as Administrator
-if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {  
-   $arguments = "& '" + $myinvocation.mycommand.definition + "'"
-   Start-Process -Wait powershell -Verb runAs -WindowStyle Hidden -ArgumentList $arguments
-   Break
-}
+# if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {  
+#    $arguments = "& '" + $myinvocation.mycommand.definition + "'"
+#    Start-Process -Wait powershell -Verb runAs -WindowStyle Hidden -ArgumentList $arguments
+#    Break
+# }
 
 # Clear screen
 Clear-Host
@@ -94,7 +94,8 @@ Get-Content $vagrantTemplateFile | ForEach-Object{
 # Up kvm stack
 $kvm = "$baseVagrantfile"
 Set-Location $kvm
-Start-Process -Wait -WindowStyle Minimized -FilePath $vagrant -ArgumentList "up"  -Verb runAs
+vagrant up
+#Start-Process -Wait -WindowStyle Minimized -FilePath $vagrant -ArgumentList "up"  -Verb runAs
 Copy-Item .\.vagrant\machines\rock-kvm-server01\virtualbox\private_key "$vagrantPK\$vmName"
 
 # Fix powershell error
