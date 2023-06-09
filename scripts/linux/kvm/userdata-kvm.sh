@@ -17,13 +17,18 @@ cd /home/vagrant || exit
 clear
 
 # Variables
-NOCOLOR='\033[0m'
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 ORANGE='\033[0;33m'
 BLUE='\033[0;34m'
 LIGHTGRAY='\033[0;37m'
 DISTRO=$(cat /etc/*release | grep -ws NAME=)
+BR_NAME="br0"
+BR_INT="eth2"
+SUBNET_IP="172.36.12.3/24"
+GW="172.36.12.1"
+DNS1="192.168.0.130"
+DNS2="1.1.1.1"
 
 if [[ "$DISTRO" == *"Rocky Linux"* ]]; then
     echo -e "${GREEN}Congratulations! Your distribution has been enabled for this project!!!"
@@ -86,35 +91,27 @@ echo -e "${LIGHTGRAY}-----------------------------------------------------------
 echo -e "${ORANGE}Create a Network Bridge for KVM instances..."
 echo -e "${GREEN} "
 
-## Variables
-BR_NAME="br0"
-BR_INT="eth1"
-SUBNET_IP="172.36.12.3/24"
-GW="172.36.12.1"
-DNS1="192.168.0.130"
-DNS2="1.1.1.1"
+## Clear old connections
+WIRED_NAME=$(nmcli -t -f NAME c show | grep "Wired")
+while IFS= read -r NAME; do echo nmcli connection delete "$NAME"; done <<< "$WIRED_NAME"
 
-## define the bridge network
+# define the bridge network
 nmcli connection add type bridge autoconnect yes con-name ${BR_NAME} ifname ${BR_NAME}
 
 ## add the IP, gateway, and DNS to the bridge
 nmcli connection modify ${BR_NAME} ipv4.addresses ${SUBNET_IP} ipv4.method manual
 nmcli connection modify ${BR_NAME} ipv4.gateway ${GW}
-nmcli connection modify ${BR_NAME} ipv4.dns ${DNS1}
-nmcli connection modify ${BR_NAME} +ipv4.dns ${DNS2}
-
-## Clear old connections
-WIRED_NAME=$(nmcli -t -f NAME c show | grep "Wired")
-while IFS= read -r NAME; do echo nmcli connection delete "$NAME"; done <<< "$WIRED_NAME"
+nmcli connection modify ${BR_NAME} ipv4.dns "$DNS1 $DNS2"
 
 ## Add the identified network device as a slave to the bridge
 nmcli connection add type bridge-slave autoconnect yes con-name ${BR_INT} ifname ${BR_INT} master ${BR_NAME}
 
 ## Start the network bridge
 nmcli connection reload
+nmcli connection down "$(nmcli -t -f NAME,DEVICE c show --active | grep $BR_INT | cut -d : -f 1)"
 nmcli connection up br0
 
-## Edit file /etc/qemu-kvm/bridge.conf
+# Edit file /etc/qemu-kvm/bridge.conf
 # -rw-r--r--. 1 root root 13 May  9 04:44 /etc/qemu-kvm/bridge.conf
 cp configs/kvm/bridge.conf /etc/qemu-kvm/
 dos2unix /etc/qemu-kvm/bridge.conf
@@ -127,11 +124,24 @@ systemctl restart NetworkManager
 systemctl restart libvirtd
 echo -e "${LIGHTGRAY}----------------------------------------------------------------"
 
+# Declaring the KVM Bridged Network
+virsh net-define configs/kvm/bridge.xml
+virsh net-start br0
+virsh net-autostart br0
+
 ## check connections
 echo -e "${ORANGE}Check Network Status..."
 echo -e "${GREEN}$(ip link show br0 && ip addr show br0)"
-echo -e "${GREEN}$(virsh net-list)"
+echo -e "${GREEN}$(nmcli connection show br0 | grep dns)"
+echo -e "${GREEN}$(virsh net-list --all)"
 echo -e "${LIGHTGRAY}----------------------------------------------------------------"
+
+## Example for user new bridge network
+#virt-install --name demo_vm_guest \
+    #--memory 1024 \
+    #--disk path=/tmp/demo_vm_guest. img,size=10 \
+    #--network network=br0 \
+    #--cdrom /home/demo/Rocky-9.1-x86_64-minimal.iso
 
 # Configure KVM Storage Pool
 
