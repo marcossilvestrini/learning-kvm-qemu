@@ -118,7 +118,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       "MediaTek Wi-Fi 6 MT7921 Wireless LAN"
     ]
     ## Host-Only - Private Network    
-    rock_kvm_server01.vm.network "private_network", nic_type: "virtio", adapter: 3, mac: "080027f3066b", ip: "172.36.12.2", netmask: "255.255.255.0"
+    #rock_kvm_server01.vm.network "private_network", nic_type: "virtio", adapter: 3, mac: "080027f3066b", ip: "172.36.12.2", netmask: "255.255.255.0"
+    rock_kvm_server01.vm.network "private_network", nic_type: "virtio", adapter: 3, mac: "080027f3066b", ip: "0.0.0.0"
 
     # HOSTNAME
     rock_kvm_server01.vm.hostname =VM_ROCK_KVM_SERVER01
@@ -146,16 +147,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     rock_kvm_server01.vm.provision "shell", name: "[USERDATA-SAMBA-CLIENT.SH]", path: "../../scripts/linux/samba/userdata-samba-client.sh"
 
     # INSTALL CONFIGURE PACKER
-    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-KVM.SH]", path: "../../scripts/linux/packer/userdata-packer.sh"
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-PACKER.SH]", path: "../../scripts/linux/packer/userdata-packer.sh"
 
     # INSTALL CONFIGURE TERRAFORM
-    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-KVM.SH]", path: "../../scripts/linux/terraform/userdata-terraform.sh"
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-TERRAFORM.SH]", path: "../../scripts/linux/terraform/userdata-terraform.sh"
 
     # INSTALL CONFIGURE ANSIBLE
-    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-KVM.SH]", path: "../../scripts/linux/ansible/userdata-ansible.sh"
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-ANSIBLE.SH]", path: "../../scripts/linux/ansible/userdata-ansible.sh"
 
     # CONFIGURE KVM
     rock_kvm_server01.vm.provision "shell", name: "[USERDATA-KVM.SH]", path: "../../scripts/linux/kvm/userdata-kvm.sh"
+
+    # CONFIGURE DHCP
+    rock_kvm_server01.vm.provision "shell", name: "[USERDATA-KVM.SH]", path: "../../scripts/linux/dhcp/dhcp-server.sh"
 
     # RESTART SERVER FOR APPLY NETWORK CONFIGURATION
     #rock_kvm_server01.vm.provision :shell do |shell|

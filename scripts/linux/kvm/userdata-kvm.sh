@@ -25,8 +25,8 @@ LIGHTGRAY='\033[0;37m'
 DISTRO=$(cat /etc/*release | grep -ws NAME=)
 BR_NAME="br0"
 BR_INT="eth2"
-SUBNET_IP="172.36.12.3/24"
-GW="172.36.12.1"
+SUBNET_IP="192.168.0.140/24"
+GW="192.168.0.1"
 DNS1="192.168.0.130"
 DNS2="1.1.1.1"
 
@@ -136,13 +136,6 @@ echo -e "${GREEN}$(nmcli connection show br0 | grep dns)"
 echo -e "${GREEN}$(virsh net-list --all)"
 echo -e "${LIGHTGRAY}----------------------------------------------------------------"
 
-## Example for user new bridge network
-#virt-install --name demo_vm_guest \
-    #--memory 1024 \
-    #--disk path=/tmp/demo_vm_guest. img,size=10 \
-    #--network network=br0 \
-    #--cdrom /home/demo/Rocky-9.1-x86_64-minimal.iso
-
 # Configure KVM Storage Pool
 
 ## Mount /dev/sdb - logical volume
@@ -166,3 +159,13 @@ virsh pool-start  lab_kvm_storagepool
 echo -e "${ORANGE}Check Storage Pool..."
 echo -e "${GREEN} "
 virsh pool-list --all --details
+
+# Set user permissions for KVM
+chown -R vagrant:libvirt /var/lib/libvirt/
+
+# Example for user new bridge network
+#virt-install --name demo_vm_guest \
+    #--memory 1024 \
+    #--disk path=/tmp/demo_vm_guest. img,size=10 \
+    #--network network=br0 \
+    #--cdrom /home/demo/Rocky-9.1-x86_64-minimal.iso
