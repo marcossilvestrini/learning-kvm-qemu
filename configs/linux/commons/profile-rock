@@ -92,3 +92,9 @@ sudo timedatectl set-timezone America/Sao_Paulo
 
 # Set packer home
 export PATH=/packer_home/:$PATH
+
+## DNS for KVM Bridge
+BR_NAME="br0"
+DNS1="192.168.0.130"
+DNS2="1.1.1.1"
+sudo nmcli connection modify ${BR_NAME} ipv4.dns "$DNS1 $DNS2"

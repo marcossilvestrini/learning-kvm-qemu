@@ -11,3 +11,4 @@ $TTL 1h
                     NS      rock-kvm-server01.skynet.com.br. ;primary nameserver                                        
 
 2                   PTR     rock-kvm-server01.skynet.com.br.
+3                   PTR     rock-kvm-server01.skynet.com.br.

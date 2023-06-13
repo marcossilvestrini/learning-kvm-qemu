@@ -25,8 +25,8 @@ LIGHTGRAY='\033[0;37m'
 DISTRO=$(cat /etc/*release | grep -ws NAME=)
 BR_NAME="br0"
 BR_INT="eth2"
-SUBNET_IP="192.168.0.140/24"
-GW="192.168.0.1"
+SUBNET_IP="172.36.12.3/24"
+GW="172.36.12.2"
 DNS1="192.168.0.130"
 DNS2="1.1.1.1"
 
@@ -107,8 +107,9 @@ nmcli connection modify ${BR_NAME} ipv4.dns "$DNS1 $DNS2"
 nmcli connection add type bridge-slave autoconnect yes con-name ${BR_INT} ifname ${BR_INT} master ${BR_NAME}
 
 ## Start the network bridge
-nmcli connection reload
 nmcli connection down "$(nmcli -t -f NAME,DEVICE c show --active | grep $BR_INT | cut -d : -f 1)"
+nmcli connection reload
+nmcli connection dow br0
 nmcli connection up br0
 
 # Edit file /etc/qemu-kvm/bridge.conf

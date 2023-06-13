@@ -14,8 +14,8 @@ $TTL 1h
                             
 
 rock-kvm-server01           A       192.168.0.130   ;glue record,dns master
-rock-kvm-server01           A       192.168.0.140   ;glue record,dns master
 rock-kvm-server01           A       172.36.12.2     ;glue record,dns master
+rock-kvm-server01           A       172.36.12.3     ;glue record,dns master
 win-silvestrini             A       192.168.0.100   ;my desktop
 win-silvestrin2             A       192.168.0.101   ;my notebook
 mail                        A       192.168.0.130   ;mail

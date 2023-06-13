@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="LIVTcx1E754gs991MiXM" name="Page-1">
-        <mxGraphModel dx="1410" dy="483" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1345" dy="670" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -86,7 +86,7 @@
                     <mxGeometry x="880" y="540" width="200" height="140" as="geometry"/>
                 </mxCell>
                 <mxCell id="45" value="bridge network&amp;nbsp; 192.168.0.140" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="39" vertex="1">
-                    <mxGeometry x="5" y="62" width="190" height="30" as="geometry"/>
+                    <mxGeometry x="10" y="62" width="190" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="43" style="edgeStyle=none;html=1;entryX=0.47;entryY=-0.007;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="2" source="12" target="36" edge="1">
                     <mxGeometry relative="1" as="geometry"/>

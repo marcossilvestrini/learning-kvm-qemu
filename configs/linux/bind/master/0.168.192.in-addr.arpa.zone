@@ -14,4 +14,3 @@ $TTL 1h
 100                 PTR     win-silvestrini.skynet.com.br.
 101                 PTR     win-silvestrini.skynet.com.br.
 130                 PTR     rock-kvm-server01.skynet.com.br.
-140                 PTR     rock-kvm-server01.skynet.com.br.
