@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="LIVTcx1E754gs991MiXM" name="Page-1">
-        <mxGraphModel dx="1345" dy="677" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1342" dy="784" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -67,28 +67,25 @@
                 <mxCell id="4" value="Desktop" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.computer;pointerEvents=1;" parent="30" vertex="1">
                     <mxGeometry x="70" y="130" width="60" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="41" value="" style="edgeStyle=none;html=1;startArrow=none;" parent="2" source="50" target="39" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
                 <mxCell id="36" value="logical network level 1" style="swimlane;whiteSpace=wrap;html=1;" parent="2" vertex="1">
-                    <mxGeometry x="405" y="540" width="200" height="140" as="geometry"/>
+                    <mxGeometry x="391" y="540" width="218" height="140" as="geometry"/>
                 </mxCell>
-                <mxCell id="42" value="private network&amp;nbsp; 172.36.12.0/24" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="36" vertex="1">
-                    <mxGeometry x="5" y="62" width="190" height="30" as="geometry"/>
+                <mxCell id="42" value="private network 172.36.12.2 (eth2)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="36" vertex="1">
+                    <mxGeometry x="-2" y="60" width="210" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="44" value="private network&amp;nbsp; 10.0.1.0/24" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="36" vertex="1">
-                    <mxGeometry x="5" y="32" width="170" height="30" as="geometry"/>
+                <mxCell id="44" value="private network&amp;nbsp; 10.0.1.0/24(eth0)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="36" vertex="1">
+                    <mxGeometry x="-7" y="30" width="200" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="37" value="bridge network 192.168.0.0/24" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="36" vertex="1">
-                    <mxGeometry x="3" y="92" width="190" height="30" as="geometry"/>
+                <mxCell id="37" value="bridge network 192.168.0.0/24(eth1)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="36" vertex="1">
+                    <mxGeometry x="-7" y="92" width="220" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="39" value="logical network level 2" style="swimlane;whiteSpace=wrap;html=1;" parent="2" vertex="1">
-                    <mxGeometry x="880" y="540" width="200" height="140" as="geometry"/>
+                    <mxGeometry x="872.5" y="540" width="215" height="140" as="geometry"/>
                 </mxCell>
-                <mxCell id="45" value="bridge network&amp;nbsp; 172.36.12.2" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="39" vertex="1">
-                    <mxGeometry x="15" y="62" width="180" height="30" as="geometry"/>
+                <mxCell id="45" value="bridge network&amp;nbsp; 172.36.12.2/24(br0)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="39" vertex="1">
+                    <mxGeometry x="-5" y="62" width="220" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="43" style="edgeStyle=none;html=1;entryX=0.47;entryY=-0.007;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="2" source="12" target="36" edge="1">
+                <mxCell id="43" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="2" source="12" target="36" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="49" value="" style="edgeStyle=none;html=1;endArrow=none;" parent="2" source="28" target="48" edge="1">
@@ -101,12 +98,11 @@
                     <mxGeometry x="310" y="595" width="30" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="50" value="bridge" style="aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;fontColor=#4277BB;labelBackgroundColor=#ffffff;fontSize=12;spacingTop=3;image;image=img/lib/ibm/vpc/Bridge.svg;" parent="2" vertex="1">
-                    <mxGeometry x="720" y="595" width="30" height="30" as="geometry"/>
+                    <mxGeometry x="720" y="601" width="30" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="51" value="" style="edgeStyle=none;html=1;endArrow=none;" parent="2" source="36" target="50" edge="1">
+                <mxCell id="58" value="" style="edgeStyle=none;html=1;" parent="2" source="42" edge="1">
                     <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="625" y="630" as="sourcePoint"/>
-                        <mxPoint x="900" y="630" as="targetPoint"/>
+                        <mxPoint x="870" y="615" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
             </root>

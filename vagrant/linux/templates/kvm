@@ -116,7 +116,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     rock_kvm_server01.vm.network "public_network", nic_type: "virtio", adapter: 2, mac: "080027f3066a", ip: "192.168.0.130", netmask: "255.255.255.0", mode: "bridge",bridge: [
       "Intel(R) I211 Gigabit Network Connection",
       "MediaTek Wi-Fi 6 MT7921 Wireless LAN"
-    ]
+    ]    
     ## Host-Only - Private Network    
     rock_kvm_server01.vm.network "private_network", nic_type: "virtio", adapter: 3, mac: "080027f3066b", ip: "172.36.12.2", netmask: "255.255.255.0"
     
