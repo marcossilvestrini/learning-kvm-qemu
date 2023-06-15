@@ -1,0 +1,42 @@
+Network Host-Only
+
+ip link:
+
+2: ens160: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
+    link/ether 00:0c:29:dc:89:b1 brd ff:ff:ff:ff:ff:ff
+    altname enp3s0
+
+file:
+
+/etc/sysconfig/network-scripts/ifcfg-ens160
+
+content:
+
+TYPE=Ethernet
+BOOTPROTO=none
+NAME=ens160
+ONBOOT=yes
+BRIDGE=virbr0
+HWADDR=00:0c:29:dc:89:b1
+
+----------------------------------------------------------------------------------
+KVM Bridge
+
+ip link:
+
+4: virbr0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN mode DEFAULT group default qlen 1000
+    link/ether 52:54:00:78:95:4c brd ff:ff:ff:ff:ff:ff
+
+file:
+
+/etc/sysconfig/network-scripts/ifcfg-virbr0
+
+content:
+
+TYPE=BRIDGE
+DEVICE=virbr0
+BOOTPROTO=none
+ONBOOT=yes
+IPADDR=192.168.0.10
+NETMASK=255.255.255.0
+GATEWAY=192.168.0.1

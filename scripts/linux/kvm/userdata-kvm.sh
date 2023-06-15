@@ -94,6 +94,8 @@ echo -e "${GREEN} "
 ## Clear old connections
 WIRED_NAME=$(nmcli -t -f NAME c show | grep "Wired")
 while IFS= read -r NAME; do echo nmcli connection delete "$NAME"; done <<< "$WIRED_NAME"
+nmcli connection down "$(nmcli -t -f NAME,DEVICE c show --active | grep $BR_INT | cut -d : -f 1)"
+ip addr flush $BR_INT
 
 # define the bridge network
 nmcli connection add type bridge autoconnect yes con-name ${BR_NAME} ifname ${BR_NAME}
@@ -107,7 +109,7 @@ nmcli connection modify ${BR_NAME} ipv4.dns "$DNS1 $DNS2"
 nmcli connection add type bridge-slave autoconnect yes con-name ${BR_INT} ifname ${BR_INT} master ${BR_NAME}
 
 ## Start the network bridge
-nmcli connection down "$(nmcli -t -f NAME,DEVICE c show --active | grep $BR_INT | cut -d : -f 1)"
+
 nmcli connection reload
 nmcli connection dow br0
 nmcli connection up eth2
@@ -173,4 +175,5 @@ chown -R vagrant:libvirt /var/lib/libvirt/
     #--cdrom /home/demo/Rocky-9.1-x86_64-minimal.iso
 
 # Add this route in guest vm
-# ip route add 172.36.12.0/24 via 192.168.0.130
+
+
