@@ -68,6 +68,7 @@ $vmStorageFolders = @(
 #Destroy lab stack
 Set-Location $kvm
 Start-Process -Wait -WindowStyle Hidden  -FilePath $vagrant -ArgumentList "destroy -f"  -Verb RunAs
+#Remove-Item -Force  "$baseVagrantfile\linux\Vagrantfile"
 
 # Delete folder virtualbox machines artefacts
 $vmFolders | ForEach-Object {

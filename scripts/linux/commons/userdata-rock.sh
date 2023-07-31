@@ -72,18 +72,34 @@ systemctl daemon-reload
 # SSH,FIREWALLD AND SELINUX
 cat security/id_ecdsa.pub >>.ssh/authorized_keys
 
-# rm /etc/ssh/sshd_config.d/90-vagrant.conf
-# cp -f configs/commons/01-sshd-custom.conf /etc/ssh/sshd_config.d
-# dos2unix /etc/ssh/sshd_config.d
-# systemctl restart sshd
-# echo vagrant | $(su -c "ssh-keygen -q -t ecdsa -b 521 -N '' -f .ssh/id_ecdsa <<<y >/dev/null 2>&1" -s /bin/bash vagrant)
-# systemctl restart sshd
+rm /etc/ssh/sshd_config.d/90-vagrant.conf
+cp -f configs/commons/01-sshd-custom.conf /etc/ssh/sshd_config.d
+dos2unix /etc/ssh/sshd_config.d
+systemctl restart sshd
+echo vagrant | $(su -c "ssh-keygen -q -t ecdsa -b 521 -N '' -f .ssh/id_ecdsa <<<y >/dev/null 2>&1" -s /bin/bash vagrant)
+systemctl restart sshd
 systemctl stop firewalld
 systemctl disable firewalld
 setenforce Permissive
 
+## set ssh for root user. This is required for setu RKE2 nodes and workers
+echo "y"| ssh-keygen  -q -t ecdsa -b 521 -N '' -f security/kvm-key-ecdsa
+cat security/kvm-key-ecdsa.pub  >security/authorized_keys
+if [ -d "$HOME/.ssh" ]; then
+    rm -rf "$HOME/.ssh"
+fi
+mkdir -p "$HOME/.ssh"
+chmod 700 "$HOME/.ssh"
+cp -f security/kvm-key-ecdsa "$HOME/.ssh"
+chmod 600 "$HOME/.ssh/kvm-key-ecdsa"
+cp -f security/kvm-key-ecdsa.pub "$HOME/.ssh"
+chmod 644 "$HOME/.ssh/kvm-key-ecdsa.pub"
+cp -f security/authorized_keys "$HOME/.ssh"
+chmod 600 "$HOME/.ssh/authorized_keys"
+
+
 # Set GnuGP
-#echo vagrant | $(su -c "gpg -k" -s /bin/bash vagrant)
+echo vagrant | $(su -c "gpg -k" -s /bin/bash vagrant)
 
 # Install X11 Server
 # https://installati.one/rockylinux/8/xorg-x11-server-common/

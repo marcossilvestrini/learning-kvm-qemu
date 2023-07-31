@@ -24,9 +24,9 @@ BLUE='\033[0;34m'
 LIGHTGRAY='\033[0;37m'
 DISTRO=$(cat /etc/*release | grep -ws NAME=)
 BR_NAME="br0"
-BR_INT="eth2"
-SUBNET_IP="172.36.12.2/24"
-GW="172.36.12.1"
+BR_INT="eth1"
+SUBNET_IP="192.168.0.131/24"
+GW="192.168.0.130"
 DNS1="192.168.0.130"
 DNS2="1.1.1.1"
 
@@ -109,7 +109,6 @@ nmcli connection modify ${BR_NAME} ipv4.dns "$DNS1 $DNS2"
 nmcli connection add type bridge-slave autoconnect yes con-name ${BR_INT} ifname ${BR_INT} master ${BR_NAME}
 
 ## Start the network bridge
-
 nmcli connection reload
 nmcli connection dow br0
 nmcli connection up eth2
@@ -173,7 +172,3 @@ chown -R vagrant:libvirt /var/lib/libvirt/
     #--disk path=/tmp/demo_vm_guest. img,size=10 \
     #--network network=br0 \
     #--cdrom /home/demo/Rocky-9.1-x86_64-minimal.iso
-
-# Add this route in guest vm
-
-

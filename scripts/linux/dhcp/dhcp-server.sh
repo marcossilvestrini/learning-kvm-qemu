@@ -23,7 +23,6 @@ fi
 
 ## Configure file /etc/default/isc-dhcp-server (INTERFACEv4)
 # -rw-r--r-- 1 root root 625 Mar 28 17:33 /etc/default/isc-dhcp-server
-cp /etc/default/isc-dhcp-server configs/dhcp/isc-dhcp-server_backup
 cp configs/dhcp/isc-dhcp-server /etc/default/
 dos2unix /etc/default/isc-dhcp-server
 chmod 644 /etc/default/isc-dhcp-server

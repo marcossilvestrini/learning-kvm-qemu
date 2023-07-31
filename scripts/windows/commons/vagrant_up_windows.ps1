@@ -82,7 +82,8 @@ setx VAGRANT_HOME "$vagrantHome" >$null
 
 # Set vagrant values for kvm server
 $vagrantTemplateFile = "$baseVagrantfile\templates\kvm"      
-$vagrantTemplate="$baseVagrantfile\Vagrantfile"   
+$vagrantTemplate="$baseVagrantfile\Vagrantfile"
+Out-File $vagrantTemplate -Force   
 Get-Content $vagrantTemplateFile | ForEach-Object{
    $_ -replace "VAGRANT_MEMORY",$vagrantMemory `
       -replace "VAGRANT_CPU",$vagrantCPU `
